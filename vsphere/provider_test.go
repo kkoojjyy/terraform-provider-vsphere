@@ -12,13 +12,13 @@ import (
 )
 
 var testAccProviders map[string]terraform.ResourceProvider
-var testAccProvider *schema.Provider
+var testAccProvider *vSphereProvider
 var testAccNullProvider *schema.Provider
 var testAccRandomProvider *schema.Provider
 var testAccTemplateProvider *schema.Provider
 
 func init() {
-	testAccProvider = Provider().(*schema.Provider)
+	testAccProvider = Provider().(*vSphereProvider)
 	testAccNullProvider = null.Provider().(*schema.Provider)
 	testAccRandomProvider = random.Provider().(*schema.Provider)
 	testAccTemplateProvider = template.Provider().(*schema.Provider)
@@ -31,7 +31,7 @@ func init() {
 }
 
 func TestProvider(t *testing.T) {
-	if err := Provider().(*schema.Provider).InternalValidate(); err != nil {
+	if err := Provider().(*vSphereProvider).InternalValidate(); err != nil {
 		t.Fatalf("err: %s", err)
 	}
 

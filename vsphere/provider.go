@@ -1,6 +1,7 @@
 package vsphere
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -15,7 +16,7 @@ const defaultAPITimeout = time.Minute * 5
 
 // Provider returns a terraform.ResourceProvider.
 func Provider() terraform.ResourceProvider {
-	return &schema.Provider{
+	p := &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"user": &schema.Schema{
 				Type:        schema.TypeString,
@@ -140,6 +141,7 @@ func Provider() terraform.ResourceProvider {
 
 		ConfigureFunc: providerConfigure,
 	}
+	return &vSphereProvider{p}
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
@@ -148,4 +150,13 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 		return nil, err
 	}
 	return c.Client()
+}
+
+type vSphereProvider struct {
+	*schema.Provider
+}
+
+func (p *vSphereProvider) Close() error {
+	log.Printf("[DEBUG] Closing vSphere priovider")
+	return nil
 }
